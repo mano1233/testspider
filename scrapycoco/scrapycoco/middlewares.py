@@ -2,6 +2,8 @@ from scrapy import signals
 from scrapy.exceptions import NotConfigured
 from scrapy.utils.httpobj import urlparse_cached
 from .custom_robotparser import CustomRobotParser
+from pprint import pprint
+
 
 class CustomRobotMiddleware:
     @classmethod
@@ -18,6 +20,8 @@ class CustomRobotMiddleware:
         self.parsers = {}
 
     def process_request(self, request, spider):
+        if request.url.startswith("https"):
+            request.meta['verify'] = False
         if self.robotstxt_obey:
             rp = self.get_robot_parser(request, spider)
             if rp and not rp.allow(request.url, self.robotstxt_user_agent):
@@ -27,6 +31,7 @@ class CustomRobotMiddleware:
     def get_robot_parser(self, request, spider):
         # Get the base URL for the request and find the corresponding robots.txt URL
         url = urlparse_cached(request)
+        pprint(url.scheme)
         rp_url = url.scheme + '://' + url.netloc + '/robots.txt'
 
         # Check if a robot parser already exists for the base URL

@@ -1,3 +1,21 @@
+import scrapy
+from scrapy.core.downloader.contextfactory import ScrapyClientContextFactory
+import OpenSSL
+import ssl
+
+class CustomContextFactory(ScrapyClientContextFactory):
+    def __init__(self):
+        self.method = OpenSSL.SSL.TLSv1_2_METHOD
+        super().__init__()
+
+DOWNLOADER_CLIENTCONTEXTFACTORY = 'scrapy.core.downloader.contextfactory.WebClientContextFactory'
+DOWNLOADER_CLIENT_TLS_METHOD = "TLSv1.2"
+# DOWNLOAD_HANDLERS = {
+#     "https": {"class": "scrapy.core.downloader.handlers.http.HTTPDownloadHandler", "kwargs": {"context": ssl._create_unverified_context()}}
+# }
+
+
+
 # Scrapy settings for scrapycoco project
 #
 # For simplicity, this file contains only settings considered important or
@@ -11,6 +29,7 @@ BOT_NAME = 'scrapycoco'
 
 SPIDER_MODULES = ['scrapycoco.spiders']
 NEWSPIDER_MODULE = 'scrapycoco.spiders'
+
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
